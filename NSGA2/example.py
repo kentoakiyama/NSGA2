@@ -21,7 +21,6 @@ if __name__ == '__main__':
     params.mutation_eta = 10
     params.n_parallels = 1
     params.seed = None
-    # params.plot = True
 
     prob = Problems()
     prob.n_vars = 6
