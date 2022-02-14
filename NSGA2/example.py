@@ -1,4 +1,4 @@
-from eval_functions import Binh_functions, Chankong_functions, Osyczka_functions, TNK_functions
+from test_functions import Binh_functions, Chankong_functions, Osyczka_functions, TNK_functions
 from NSGA2 import NSGA2
 import numpy as np
 
