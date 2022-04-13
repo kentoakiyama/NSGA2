@@ -1,10 +1,12 @@
+'''
+NSGA2 (Non-dominated Sorting Genetic Algorithms-2)
+Scripts for multi objective optimization
+'''
+
 import os
 import time
-import math
 import datetime
-import itertools
 import numpy as np
-from tqdm import tqdm
 import matplotlib.pyplot as plt
 from multiprocessing import Pool
 
@@ -22,13 +24,19 @@ class NSGA2:
             raise Exception('Number of poplation must be multiple of 4!')
 
     def _gen_init_ind(self):
-        # generate initial population
+        '''
+        generate initial population
+        '''
         x_array = np.random.random([self.params.n_pop, self.problem.n_vars])
         for i, key in enumerate(self.problem.range.keys()):
             x_array[:, i] = x_array[:, i]*(self.problem.range[key][1]-self.problem.range[key][0])+self.problem.range[key][0]
         return x_array
 
     def _eval_inds(self, inds, gen, pool=None):
+        '''
+        evaluate individuals 
+        '''
+        # single processing
         if self.params.n_parallels == 1:
             # evaluation for each individual
             f_results = np.zeros([self.params.n_pop, self.problem.n_obj])
@@ -103,9 +111,11 @@ class NSGA2:
         return x
 
     def _dominate(self, f_1, f_2):
-        # check dominance (x1 to x2)
+        '''
+        check dominance (x1 to x2)
+        '''
+        # multi objective
         if self.problem.n_obj >= 2:
-            # multi objective
             flag1 = 0
             flag2 = 0
             for i in range(self.problem.n_obj):
@@ -119,8 +129,9 @@ class NSGA2:
                 nd = True  # x1 dominates x2
             else:
                 nd = False
+            
+        # single objective
         elif self.problem.n_obj == 1:
-            # single objective
             if f_1 > f_2:
                 nd = True
             else:
@@ -128,6 +139,9 @@ class NSGA2:
         return nd
 
     def _check_nd(self, f_results):
+        '''
+        counting the number of dominate and dominated solutions
+        '''
         n_inds = f_results.shape[0]
         counts = np.zeros([n_inds, 2])  # [number of dominate, number of dominated]
         dominate_list = [[] for _ in range(n_inds)]
@@ -141,9 +155,13 @@ class NSGA2:
         return counts, dominate_list
 
     def _sort_inds(self, inds, f_results, g_results, rank_array, cv_results):
+        '''
+        sorting the individuals 
+        '''
         rank = 1
         counts = 0
         sorted_idx = np.zeros([rank_array.size], dtype=np.int32)
+
         while True:
             rank_idx = np.where(rank_array == rank)[0]
             n_rank = rank_idx.size
@@ -160,16 +178,18 @@ class NSGA2:
                 sorted_idx[counts:counts+n_rank] = rank_idx
             rank += 1
             counts += n_rank
+
         inds = inds[sorted_idx]
         f_results = f_results[sorted_idx]
         g_results = g_results[sorted_idx]
         rank_array = rank_array[sorted_idx]
         cv_results = cv_results[sorted_idx]
-        # print(f_results)
         return inds, f_results, g_results, rank_array, cv_results
 
     def _get_rank(self, inds, cv_results):
-        # get rank for each individual (rank1 -> non-dominated solution)
+        '''
+        get rank for each individual
+        '''
         feas_idx = np.where(cv_results == 0)[0]  # index for feasible solution
         infeas_idx = np.where(cv_results != 0)[0]  # index for infeasible solution
         feas_inds = inds[feas_idx]
@@ -194,7 +214,6 @@ class NSGA2:
         if infeas_idx.size != 0:
             cv_rank = np.argsort(cv_results[infeas_idx], axis=0) + rank
             rank_array[infeas_idx] = cv_rank
-        # print(rank_array)
         return rank_array
 
     def _tournament(self, rank_array, idx1, idx2):
@@ -332,16 +351,6 @@ class NSGA2:
             # logger
             file_path = f'History\\all_gen_{gen:3>0}.dat'
             self._logger(res, gen, file_path)
-
-            # if self.params.plot:
-            #     # plot result for each generation
-            #     combs = itertools.combinations(range(self.problem.n_obj), 2)
-            #     if gen >= 2:
-            #         plt.clf()
-            #         plt.close()
-            #         time.sleep(10)
-            #     for comb in combs:
-            #         self._plot(gen, res, comb)
 
             nd_idx = np.where(p_rank_array == 1)[0]
             print(f'{gen:>5} | {n_eval:>8} | {np.min(p_cv_results):>7} | {np.max(p_cv_results):>7} | {np.average(p_cv_results):.7f} | {len(nd_idx):>6}|')
