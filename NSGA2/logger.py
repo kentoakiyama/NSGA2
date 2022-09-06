@@ -1,6 +1,6 @@
 from logging import getLogger, Formatter, DEBUG, StreamHandler
 
-def custom_logger(name):
+def logger(name):
     logger = getLogger(name)
     logger.setLevel(DEBUG)
 

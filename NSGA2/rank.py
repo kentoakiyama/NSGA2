@@ -1,10 +1,11 @@
-from urllib.parse import ParseResultBytes
-
 import numpy as np
 
+from NSGA2.dominate import Dominate
+
 class Rank:
-    def __init__(self):
-        pass
+    def __init__(self, n_obj):
+        self.dominate = Dominate(n_obj)
+
     def eval(self, inds, cv_results):
         '''
         get rank for each individual
@@ -17,7 +18,7 @@ class Rank:
         rank_array = np.zeros([n_inds, 1])
         rank = 1
         if feas_idx.size != 0:
-            counts, dominate_list = self._check_nd(feas_inds)
+            counts, dominate_list = self.dominate(feas_inds)
             # sorting for feasible solution
             while True:
                 # get index of individual that is not dominated
