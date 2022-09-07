@@ -8,7 +8,9 @@ class Individual:
         self._x = x
     
         self._f = None
-        self._c = None
+        self._g = None
+        self._cv = None
+        self._r = None
         self._cd = 0
 
     def set_result(self, f, g):
@@ -47,7 +49,7 @@ class Individual:
     @property
     def cv(self):
         # constraint violation
-        self._cv = sum([1 if g < 0 else 0 for g in self._g])
+        self._cv = sum([0 if g < 0 else 1 for g in self._g])
         return self._cv
 
     @property
@@ -56,6 +58,8 @@ class Individual:
     
     @property
     def feasible(self):
+        if self.cv == None:
+            self.cv()
         if self._cv == 0:
             return True
         else:

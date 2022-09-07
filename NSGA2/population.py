@@ -1,3 +1,4 @@
+from typing import List
 import numpy as np
 
 from nsga2.individual import Individual
@@ -13,6 +14,8 @@ class Population:
         self.xu = xu
         self.sampling = sampling
 
+        self.history = []
+
         self.rank = Rank(n_obj, n_constr)
     
     def create(self, gen: int, x=None):
@@ -20,6 +23,9 @@ class Population:
             x = self.x_sampling()
         individuals = [Individual(gen, (i+1), x) for i, x in enumerate(x)]
         return individuals
+    
+    def add_history(self, pop: List):
+        self.history.extend(pop)
 
     def x_sampling(self):
         pop = np.random.random([self.pop_size, self.n_var])
@@ -37,6 +43,13 @@ class Population:
         self.calc_cd(pop)
         pop = self.sort(pop)
         return pop[:self.pop_size]
+    
+    def write(self, pop, filename):
+        with open(filename, 'a') as f:
+            for ind in pop:
+                string = f'{ind.gen},{ind.ids},{list(ind.x)},{list(ind.f)},{list(ind.g)},{ind.cv},{ind.feasible}\n'
+                string = string.replace('[', '').replace(']', '').replace(' ', '')
+                f.write(string)
     
     def calc_cd(self, pop):
         rank = 1
