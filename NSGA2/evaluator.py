@@ -20,12 +20,10 @@ class Evaluator:
         individual.set_result(f, g)
 
     def eval(self, pop):
-        start = time()
         if self.n_processes == 1:
             for individual in pop:
                 self._eval_ind(individual)
         elif self.n_processes >= 2:
             with Pool(self.n_processes) as pool:
                 pool.starmap(self._eval_ind, pop)
-        # print(time() - start)
         return pop
