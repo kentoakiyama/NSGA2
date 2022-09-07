@@ -34,19 +34,19 @@ class Dominate:
                 nd = False
         return nd
 
-    def eval(self, f_results):
+    def eval(self, pop):
         '''
         counting the number of dominate and dominated solutions
         '''
-        n_inds = f_results.shape[0]
+        n_inds = len(pop)
         counts = np.zeros([n_inds, 2])  # [number of dominate, number of dominated]
         dominate_list = [[] for _ in range(n_inds)]
         for i in range(n_inds):
             for j in range(n_inds):
-                nd = self._dominate(f_results[i], f_results[j])
+                nd = self._dominate(pop[i].f, pop[j].f)
                 if nd:
-                    counts[i, 0] += 1
-                    counts[j, 1] += 1
+                    counts[i, 0] += 1  # dominate
+                    counts[j, 1] += 1  # dominated
                     dominate_list[i].append(j)
         return counts, dominate_list
 

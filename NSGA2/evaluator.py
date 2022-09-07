@@ -10,19 +10,14 @@ class Evaluator:
         self.pop_size = pop_size
         self.n_proesses = n_proesses
 
-    def _eval_ind(self, ind, gen, ids):
-        f_res, g_res = self.functions(ind, gen, ids)
-        return f_res, g_res
+    def _eval_ind(self, individual):
+        f, g = self.functions(individual.x, individual.gen, individual.ids)
+        individual.set_result(f, g)
 
 
-    def eval(self, gen: int, pop):
-        f_results = np.zeros([self.pop_size, self.n_obj])
-        g_results = np.zeros([self.pop_size, self.n_constr])
-        for ids, ind in enumerate(pop):
-            f_results[ids], g_results[ids] = self._eval(ind, gen, ids)
-        
-        # eval constraints
-        cv_results = np.where(g_results <= 0, 0, 1)
-        cv_results = np.sum(cv_results, axis=1)[..., np.newaxis]
-    
-        return f_results, g_results, cv_results
+    def eval(self, pop):
+        # f_results = np.zeros([self.pop_size, self.n_obj])
+        # g_results = np.zeros([self.pop_size, self.n_constr])
+        for individual in pop:
+            self._eval_ind(individual)
+        return pop
