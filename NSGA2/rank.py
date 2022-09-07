@@ -10,10 +10,10 @@ class Rank:
     def eval(self, pop):
         '''
         get rank for each individual
+
+        input:
+        pop: list of individuals
         '''
-        # feas_idx = np.where(cv_results == 0)[0]  # index for feasible solution
-        # infeas_idx = np.where(cv_results != 0)[0]  # index for infeasible solution
-        # feas_inds = inds[feas_idx]
 
         feas_sols = [ind for ind in pop if ind.cv == 0]
         infeas_sols = [ind for ind in pop if ind.cv != 0]
