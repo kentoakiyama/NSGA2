@@ -2,13 +2,13 @@ import numpy as np
 
 
 class Mutation:
-    def __init__(self, xl, xu, eta):
+    def __init__(self, mutation_prob, xl, xu, eta):
+        self.mutation_prob = mutation_prob
         self.xl = xl
         self.xu = xu
         self.eta = eta
-        pass
 
-    def mutation(self, x):
+    def _mutation(self, x):
         """
         Mutation function
         """
@@ -30,3 +30,8 @@ class Mutation:
         x = np.where(x < self.xl, self.xl, x)
         x = np.where(x > self.xu, self.xu, x)
         return x
+    
+    def mutation(self, pop):
+        for i in range(len(pop)):
+            if np.random.random() < self.mutation_prob:
+                self._mutation(pop[i])
