@@ -4,10 +4,10 @@ import numpy as np
 def Binh_functions(x, gen, ids):
     # objective fucntions
     f_1 = 4*x[0]**2 + 4*x[1]**2
-    f_2 = (x[0]-5)**2 + (x[1]-1)**2
+    f_2 = (x[0]-5)**2 + (x[1]-5)**2
     # constraint functions
     g_1 = (x[0]-5)**2 + x[1]**2 - 25
-    g_2 = -(x[0]-8)**2 + (x[1]+3)**2 + 7.7
+    g_2 = -(x[0]-8)**2 - (x[1]+3)**2 + 7.7
     return [f_1, f_2], [g_1, g_2]
 
 
