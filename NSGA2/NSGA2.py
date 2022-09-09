@@ -17,17 +17,19 @@ from nsga2.individual import Individual
 
 
 class NSGA2:
-    def __init__(self, functions, n_var: int, n_obj: int, n_constr: int, pop_size: int, n_gen: int, xl, xu, mutation_probs=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs'):
+    def __init__(self, problem, pop_size: int, n_gen: int, mutation_probs=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs'):
         if pop_size % 4 != 0:
             raise ValueError('"pop_size" must be multiple of 4')
 
+        self.problem = problem()
+
         self.pop_size = pop_size            # number of population size (must be multiple of 4)
         self.n_gen = n_gen                  # number of generation
-        self.n_var = n_var                  # number of variables
-        self.n_obj = n_obj                  # number of objective function
-        self.n_constr = n_constr            # number of constraint function
-        self.xl = xl                        # lower bound of variables
-        self.xu = xu                        # upper bound of variables
+        self.n_var = self.problem.n_var                  # number of variables
+        self.n_obj = self.problem.n_obj                  # number of objective function
+        self.n_constr = self.problem.n_constr            # number of constraint function
+        self.xl = self.problem.xl                        # lower bound of variables
+        self.xu = self.problem.xu                        # upper bound of variables
         self.mutation_eta = mutation_eta
         self.crossover_eta = crossover_eta
         self.n_processes = n_processes
@@ -39,14 +41,14 @@ class NSGA2:
         random.seed(seed)
         np.random.seed(seed)
 
-        self.population = Population(pop_size, n_var, n_obj, n_constr, xl, xu)
-        self.evaluator = Evaluator(functions, pop_size, n_obj, n_constr, n_processes)
-        self.dominate = Dominate(n_obj)
-        self.rank = Rank(n_obj, n_constr)
-        self.crossover = Crossover(xl, xu, crossover_eta)
-        self.mutation = Mutation(mutation_probs, xl, xu, mutation_eta)
+        self.population = Population(pop_size, self.n_var, self.n_obj, self.n_constr, self.xl, self.xu)
+        self.evaluator = Evaluator(self.problem, pop_size, self.n_obj, self.n_constr, n_processes)
+        self.dominate = Dominate(self.n_obj)
+        self.rank = Rank(self.n_obj, self.n_constr)
+        self.crossover = Crossover(self.xl, self.xu, crossover_eta)
+        self.mutation = Mutation(mutation_probs, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
-        self.mating = Mating(n_obj, n_var, self.selection, self.crossover, self.mutation)
+        self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
     
     def load_history(self):

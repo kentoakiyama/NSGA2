@@ -5,8 +5,8 @@ import numpy as np
 from time import time
 
 class Evaluator:
-    def __init__(self, functions, pop_size, n_obj, n_constr, n_processes=1):
-        self.functions = functions
+    def __init__(self, problem, pop_size, n_obj, n_constr, n_processes=1):
+        self.problem = problem
         self.n_obj = n_obj
         self.n_constr = n_constr
         self.pop_size = pop_size
@@ -15,7 +15,7 @@ class Evaluator:
         self.history = []
 
     def _eval_ind(self, individual):
-        f, g = self.functions(individual.x, individual.gen, individual.ids)
+        f, g = self.problem.evaluate(individual.x, individual.gen, individual.ids)
         self.history.append(individual)
         individual.set_result(f, g)
 
