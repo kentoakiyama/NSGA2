@@ -3,6 +3,7 @@ import numpy as np
 
 from nsga2.individual import Individual
 from nsga2.rank import Rank
+from nsga2.lhs import lhs
 
 
 class Population:
@@ -28,9 +29,10 @@ class Population:
         self.history.extend(pop)
 
     def x_sampling(self):
-        pop = np.random.random([self.pop_size, self.n_var])
-        pop = pop * (self.xu - self.xl) + self.xl
-        return pop
+        # x = np.random.random([self.pop_size, self.n_var])
+        x = lhs(self.n_var, self.pop_size)
+        x = x * (self.xu - self.xl) + self.xl
+        return x
     
     def sort(self, pop):
         new_pop = sorted(pop, key=lambda ind: ind.cd, reverse=True)
@@ -68,7 +70,7 @@ class Population:
                 f_i_min = min([ind.f[i] for ind in tmp_pop])
                 f_i_max = max([ind.f[i] for ind in tmp_pop])
                 
-                for j in range(len(tmp_pop)-2):
+                for j in range(1, len(tmp_pop)-1):
                     cd = (tmp_pop[j+1].f[i] - tmp_pop[j-1].f[i]) / (f_i_max - f_i_min)
 
                     tmp_pop[j].add_cd(cd)

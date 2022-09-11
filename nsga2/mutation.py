@@ -27,8 +27,7 @@ class Mutation:
             deltaq = 1 - val**mut_pow
 
         x = x + deltaq*(self.xu - self.xl)
-        x = np.where(x < self.xl, self.xl, x)
-        x = np.where(x > self.xu, self.xu, x)
+        x = np.clip(x, self.xl, self.xu)
         return x
     
     def mutation(self, pop):

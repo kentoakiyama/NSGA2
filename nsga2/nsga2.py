@@ -83,14 +83,12 @@ class NSGA2:
                 self.evaluator.eval(parent_pop)
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
-                # self.population.add_history(parent_pop)
             else:
                 mating = Mating(self.pop_size, self.n_var, self.selection.selection, self.crossover.crossover_sbx, self.mutation.mutation)
                 child_x = mating.mating(parent_pop)
                 child_pop = self.population.create(gen, child_x)
                 self.evaluator.eval(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv')
-                # self.population.add_history(child_pop)
                 parent_pop = self.population.reduce(parent_pop, child_pop)
             self.logger.info(f'{gen: >4} finished')
         
