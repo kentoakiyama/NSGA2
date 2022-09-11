@@ -16,7 +16,7 @@ class Population:
 
         self.history = []
 
-        self.rank = Rank(n_obj, n_constr)
+        self.rank = Rank(n_obj)
     
     def create(self, gen: int, x=None):
         if x is None:
@@ -33,8 +33,8 @@ class Population:
         return pop
     
     def sort(self, pop):
-        new_pop = sorted(pop, key=lambda ind: ind.cd)
-        new_pop = sorted(pop, key=lambda ind: ind.r)
+        new_pop = sorted(pop, key=lambda ind: ind.cd, reverse=True)
+        new_pop = sorted(new_pop, key=lambda ind: ind.r)
         return new_pop
     
     def reduce(self, pop1, pop2):

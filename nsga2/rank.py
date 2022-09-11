@@ -3,8 +3,7 @@ import numpy as np
 from nsga2.dominate import Dominate
 
 class Rank:
-    def __init__(self, n_obj: int, n_constr: int):
-        self.n_constr = n_constr
+    def __init__(self, n_obj: int):
         self.dominate = Dominate(n_obj)
 
     def eval(self, pop):

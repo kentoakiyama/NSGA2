@@ -44,7 +44,7 @@ class NSGA2:
         self.population = Population(pop_size, self.n_var, self.n_obj, self.n_constr, self.xl, self.xu)
         self.evaluator = Evaluator(self.problem, pop_size, self.n_obj, self.n_constr, n_processes)
         self.dominate = Dominate(self.n_obj)
-        self.rank = Rank(self.n_obj, self.n_constr)
+        self.rank = Rank(self.n_obj)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
         self.mutation = Mutation(mutation_probs, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
