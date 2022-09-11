@@ -18,7 +18,6 @@ class Rank:
         infeas_sols = [ind for ind in pop if ind.cv != 0]
 
         n_inds = len(pop)
-        rank_array = np.zeros([n_inds, 1])
         rank = 1
         if len(feas_sols) != 0:
             counts, dominate_list = self.dominate.eval(feas_sols)
@@ -28,8 +27,6 @@ class Rank:
                 nd_idx = np.where(counts[:, 1] == 0)[0]
                 for i in nd_idx:
                     feas_sols[i].set_rank(rank)
-                # rank_idx = feas_idx[nd_idx]
-                # rank_array[rank_idx] = rank
                 counts[nd_idx, 1] = -1
                 for j in nd_idx:
                     counts[dominate_list[j], 1] -= 1
