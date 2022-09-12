@@ -23,6 +23,14 @@ class Individual:
     def add_cd(self, cd):
         self._cd += cd
     
+    def dominate(self, other_individual):
+        flag1 = True
+        flag2 = False
+        for ind1_fi, ind2_fi in zip(self._f, other_individual.f):
+            flag1 = flag1 and (ind1_fi <= ind2_fi)
+            flag2 = flag2 or (ind1_fi < ind2_fi)
+        return flag1 and flag2
+
     @property
     def gen(self):
         return self._gen

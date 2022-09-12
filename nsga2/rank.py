@@ -17,7 +17,6 @@ class Rank:
         feas_sols = [ind for ind in pop if ind.cv == 0]
         infeas_sols = [ind for ind in pop if ind.cv != 0]
 
-        n_inds = len(pop)
         rank = 1
         if len(feas_sols) != 0:
             counts, dominate_list = self.dominate.eval(feas_sols)

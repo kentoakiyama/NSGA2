@@ -66,9 +66,10 @@ class Population:
                 tmp_pop = sorted(tmp_pop, key=lambda ind: ind.f[i])
                 tmp_pop[0].add_cd(10e+10)
                 tmp_pop[-1].add_cd(10e+10)
-
-                f_i_min = min([ind.f[i] for ind in tmp_pop])
-                f_i_max = max([ind.f[i] for ind in tmp_pop])
+                
+                f_values = [ind.f[i] for ind in tmp_pop]
+                f_i_min = min(f_values)
+                f_i_max = max(f_values)
                 
                 for j in range(1, len(tmp_pop)-1):
                     cd = (tmp_pop[j+1].f[i] - tmp_pop[j-1].f[i]) / (f_i_max - f_i_min)

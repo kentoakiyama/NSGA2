@@ -82,6 +82,7 @@ class NSGA2:
             if gen == 1:
                 parent_pop = self.population.create(1)
                 self.evaluator.eval(parent_pop)
+                import pdb;pdb.set_trace()
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
             else:
