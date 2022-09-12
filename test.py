@@ -6,7 +6,7 @@ from test_functions.zdt import ZDT2, ZDT4
 
 
 n_gen = 100
-pop_size = 200
+pop_size = 100
 crossover_eta = 5
 mutation_prob = 0.
 mutation_eta = 10

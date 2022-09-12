@@ -10,23 +10,22 @@ class Mating:
         self.mutation = mutation
     
     def _mating(self, parent_pop):
-        rank_array = np.array([ind.r for ind in parent_pop])
-        a1 = np.random.permutation(np.array([i for i in range(self.pop_size)]))
-        a2 = np.random.permutation(np.array([i for i in range(self.pop_size)]))
+        parent_pop1 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
+        parent_pop2 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
         children = np.zeros([self.pop_size, self.n_var])
         for i in range(0, self.pop_size, 4):
             # Select parents
-            p1 = self.selection(rank_array, a1[i], a1[i+1])
-            p2 = self.selection(rank_array, a1[i+2], a1[i+3])
+            p1 = self.selection(parent_pop1[i+0], parent_pop1[i+1])
+            p2 = self.selection(parent_pop1[i+2], parent_pop1[i+3])
             # Generate children
-            c1, c2 = self.crossover(parent_pop[p1].x, parent_pop[p2].x)
+            c1, c2 = self.crossover(p1.x, p2.x)
             children[i] = c1
             children[i+1] = c2
             # Select parents
-            p1 = self.selection(rank_array, a2[i], a2[i+1])
-            p2 = self.selection(rank_array, a2[i+2], a2[i+3])
+            p1 = self.selection(parent_pop2[i+0], parent_pop2[i+1])
+            p2 = self.selection(parent_pop2[i+2], parent_pop2[i+3])
             # Generate children
-            c1, c2 = self.crossover(parent_pop[p1].x, parent_pop[p2].x)
+            c1, c2 = self.crossover(p1.x, p2.x)
             children[i+2] = c1
             children[i+3] = c2
         return children

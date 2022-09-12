@@ -50,6 +50,7 @@ class NSGA2:
         self.selection = Selection()
         self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
+        self.mating = Mating(self.pop_size, self.n_var, self.selection.selection, self.crossover.crossover_sbx, self.mutation.mutation)
     
     def load_history(self):
         if not os.path.exists('solutions.csv'):
@@ -84,8 +85,7 @@ class NSGA2:
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
             else:
-                mating = Mating(self.pop_size, self.n_var, self.selection.selection, self.crossover.crossover_sbx, self.mutation.mutation)
-                child_x = mating.mating(parent_pop)
+                child_x = self.mating.mating(parent_pop)
                 child_pop = self.population.create(gen, child_x)
                 self.evaluator.eval(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv')
