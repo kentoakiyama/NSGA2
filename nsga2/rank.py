@@ -19,19 +19,19 @@ class Rank:
 
         rank = 1
         if len(feas_sols) != 0:
-            counts, dominate_list = self.dominate.eval(feas_sols)
-            # sorting for feasible solution
-            while True:
-                # get index of individual that is not dominated
-                nd_idx = np.where(counts[:, 1] == 0)[0]
-                for i in nd_idx:
-                    feas_sols[i].set_rank(rank)
-                counts[nd_idx, 1] = -1
-                for j in nd_idx:
-                    counts[dominate_list[j], 1] -= 1
+            front = []
+            while len(feas_sols) > 0:
+                for individual in feas_sols:
+                    nd = True  # non-dominated solution flag
+                    for other_individual in feas_sols:
+                        nd = nd and (not other_individual.dominate(individual))
+                    
+                    if nd:
+                        individual.set_rank(rank)
+                        front.append(individual)
+                
+                feas_sols = [ind for ind in feas_sols if ind not in front]
                 rank += 1
-                if np.all(counts[:, 1] == -1):
-                    break
 
         if len(infeas_sols) != 0:
             cv_sorted_idx = np.argsort([ind.cv for ind in infeas_sols], axis=0)

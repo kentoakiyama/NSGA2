@@ -82,12 +82,10 @@ class NSGA2:
             if gen == 1:
                 parent_pop = self.population.create(1)
                 self.evaluator.eval(parent_pop)
-                import pdb;pdb.set_trace()
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
             else:
-                child_x = self.mating.mating(parent_pop)
-                child_pop = self.population.create(gen, child_x)
+                child_pop = self.mating.mating(parent_pop, gen)
                 self.evaluator.eval(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv')
                 parent_pop = self.population.reduce(parent_pop, child_pop)

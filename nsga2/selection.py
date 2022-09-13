@@ -8,7 +8,11 @@ class Selection:
             return individual1
         elif individual1.r > individual2.r:
             return individual2
-        elif np.random.random() <= 0.5:
+        elif individual1.cd > individual2.r:
+            return individual1
+        elif individual1.cd < individual2.r:
+            return individual2
+        elif np.random.random() < 0.5:
             return individual1
         else:
             return individual2
