@@ -88,13 +88,14 @@ class NSGA2:
             self.ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue')
         plt.draw()
         plt.pause(0.01)
-        import pdb;pdb.set_trace()
     
-    def step(self, gen, pop=None):
-        if pop is None:
-            pop = self.population.create(gen)
-        self.evaluator.eval(pop)
-        self.population.write(pop, 'solutions_all.csv')
+    def step(self, gen, parent_pop, child_pop):
+        if (parent_pop is None) and (child_pop is None):
+            parent_pop = self.population.create(gen)
+        elif (parent_pop is not None) and (child_pop is not None):
+            parent_pop = self.population.reduce(parent_pop, child_pop)
+        self.evaluator.eval(parent_pop)
+        self.population.write(parent_pop, 'solutions_all.csv')
         
 
     def minimize(self):
