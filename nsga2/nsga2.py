@@ -109,8 +109,7 @@ class NSGA2:
                 self.rank.eval(parent_pop)
                 self.display(gen, parent_pop)
             else:
-                child_x = self.mating.mating(parent_pop)
-                child_pop = self.population.create(gen, child_x)
+                child_pop = self.mating.mating(parent_pop, gen)
                 self.evaluator.eval(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv')
                 parent_pop = self.population.reduce(parent_pop, child_pop)

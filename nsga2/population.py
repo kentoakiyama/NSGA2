@@ -40,7 +40,7 @@ class Population:
         return new_pop
     
     def reduce(self, pop1, pop2):
-        pop = pop1 + pop2
+        pop = pop1.copy() + pop2.copy()
         self.rank.eval(pop)
         self.calc_cd(pop)
         pop = self.sort(pop)

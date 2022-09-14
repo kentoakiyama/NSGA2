@@ -31,6 +31,6 @@ class Mutation:
         return x
     
     def mutation(self, pop):
-        for i in range(len(pop)):
+        for ind in pop:
             if np.random.random() < self.mutation_prob:
-                self._mutation(pop[i])
+                self._mutation(ind.x)
