@@ -44,7 +44,6 @@ class Population:
         self.rank.eval(pop)
         self.calc_cd(pop)
         pop = self.sort(pop)
-        import pdb;pdb.set_trace()
         return pop[:self.pop_size]
     
     def write(self, pop, filename):
