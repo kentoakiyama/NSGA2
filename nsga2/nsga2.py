@@ -88,6 +88,7 @@ class NSGA2:
             self.ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue')
         plt.draw()
         plt.pause(0.01)
+        import pdb;pdb.set_trace()
     
     def step(self, gen, pop=None):
         if pop is None:
@@ -99,8 +100,9 @@ class NSGA2:
     def minimize(self):
         start = time()
         self.logger.info('Start optimization!')
-        self.load_history()
-
+        # self.load_history()
+        
+        parent_pop = None
         for gen in range(1, self.n_gen+1):
             if gen == 1:
                 parent_pop = self.population.create(1)
