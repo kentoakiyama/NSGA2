@@ -2,6 +2,7 @@ import os
 import random
 import numpy as np
 from time import time
+import matplotlib.pyplot as plt
 
 from nsga2.logger import custom_logger
 from nsga2.rank import Rank
@@ -51,6 +52,8 @@ class NSGA2:
         self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
         self.mating = Mating(self.pop_size, self.n_var, self.selection.selection, self.crossover.crossover_sbx, self.mutation.mutation)
+
+        self.fig, self.ax = plt.subplots()
     
     def load_history(self):
         if not os.path.exists('solutions.csv'):
@@ -72,6 +75,26 @@ class NSGA2:
             individual.set_result(f, g)
             history.append(individual)
         # self.population.add_history(history)
+    
+    def display(self, gen, pop):
+        feas_F = np.array([ind.f for ind in pop if (ind.feasible and ind.r > 1)])
+        infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
+        front_F = np.array([ind.f for ind in pop if ind.r == 1])
+        if feas_F.size != 0:
+            self.ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green')
+        if infeas_F.size != 0:
+            self.ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red')
+        if front_F.size != 0:
+            self.ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue')
+        plt.draw()
+        plt.pause(0.01)
+    
+    def step(self, gen, pop=None):
+        if pop is None:
+            pop = self.population.create(gen)
+        self.evaluator.eval(pop)
+        self.population.write(pop, 'solutions_all.csv')
+        
 
     def minimize(self):
         start = time()
@@ -82,15 +105,16 @@ class NSGA2:
             if gen == 1:
                 parent_pop = self.population.create(1)
                 self.evaluator.eval(parent_pop)
-                import pdb;pdb.set_trace()
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
+                self.display(gen, parent_pop)
             else:
                 child_x = self.mating.mating(parent_pop)
                 child_pop = self.population.create(gen, child_x)
                 self.evaluator.eval(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv')
                 parent_pop = self.population.reduce(parent_pop, child_pop)
+                self.display(gen, child_pop)
             self.logger.info(f'{gen: >4} finished')
         
         self.result.gen = [ind.gen for ind in child_pop]
