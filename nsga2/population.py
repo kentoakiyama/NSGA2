@@ -42,7 +42,7 @@ class Population:
     def reduce(self, pop1, pop2):
         pop = pop1.copy() + pop2.copy()
         self.rank.eval(pop)
-        self.calc_cd(pop)
+        self.calc_crowding_distance(pop)
         pop = self.sort(pop)
         return pop[:self.pop_size]
     
@@ -53,7 +53,7 @@ class Population:
                 string = string.replace('[', '').replace(']', '').replace(' ', '')
                 f.write(string)
     
-    def calc_cd(self, pop):
+    def calc_crowding_distance(self, pop):
         rank = 1
         evaluated = 0
         while True:

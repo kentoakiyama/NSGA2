@@ -18,7 +18,7 @@ from nsga2.individual import Individual
 
 
 class NSGA2:
-    def __init__(self, problem, pop_size: int, n_gen: int, mutation_probs=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs'):
+    def __init__(self, problem, pop_size: int, n_gen: int, mutation_prob=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs'):
         if pop_size % 4 != 0:
             raise ValueError('"pop_size" must be multiple of 4')
 
@@ -31,6 +31,7 @@ class NSGA2:
         self.n_constr = self.problem.n_constr            # number of constraint function
         self.xl = self.problem.xl                        # lower bound of variables
         self.xu = self.problem.xu                        # upper bound of variables
+        self.mutation_prob = mutation_prob
         self.mutation_eta = mutation_eta
         self.crossover_eta = crossover_eta
         self.n_processes = n_processes
@@ -47,7 +48,7 @@ class NSGA2:
         self.dominate = Dominate(self.n_obj)
         self.rank = Rank(self.n_obj)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
-        self.mutation = Mutation(mutation_probs, self.xl, self.xu, mutation_eta)
+        self.mutation = Mutation(self.mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
         self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
@@ -80,14 +81,17 @@ class NSGA2:
         feas_F = np.array([ind.f for ind in pop if (ind.feasible and ind.r > 1)])
         infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
         front_F = np.array([ind.f for ind in pop if ind.r == 1])
+        # self.fig, self.ax = plt.subplots()
         if feas_F.size != 0:
-            self.ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green')
+            self.ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
         if infeas_F.size != 0:
-            self.ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red')
+            self.ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red', marker='x', label='infeasible')
         if front_F.size != 0:
-            self.ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue')
+            self.ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
         plt.draw()
-        plt.pause(0.01)
+        plt.pause(0.05)
+        # plt.show()
+        # import pdb;pdb.set_trace()
     
     def step(self, gen, parent_pop, child_pop):
         if (parent_pop is None) and (child_pop is None):
@@ -107,6 +111,7 @@ class NSGA2:
         for gen in range(1, self.n_gen+1):
             if gen == 1:
                 parent_pop = self.population.create(1)
+                # import pdb;pdb.set_trace()
                 self.evaluator.eval(parent_pop)
                 self.population.write(parent_pop, 'solutions_all.csv')
                 self.rank.eval(parent_pop)
