@@ -60,5 +60,7 @@ class ZDT2:
 ```
 
 ## 環境
+- numpy
+- matplotlib
 
 
