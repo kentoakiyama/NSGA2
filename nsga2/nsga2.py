@@ -103,6 +103,7 @@ class NSGA2:
         self.evaluator.eval(parent_pop)
         self.population.write(parent_pop, 'solutions_all.csv')
         self.population.eval_rank(parent_pop)
+        self.population.calc_crowding_distance(parent_pop)
         self.display(gen, parent_pop, self.ax)
         self.logger.info(f'{gen: >4} finished')
 
