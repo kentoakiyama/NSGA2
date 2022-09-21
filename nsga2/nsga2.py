@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from nsga2.logger import custom_logger
 from nsga2.mating import Mating
 from nsga2.result import Result
-from nsga2.dominate import Dominate
 from nsga2.mutation import Mutation
 from nsga2.crossover import Crossover
 from nsga2.evaluator import Evaluator
@@ -44,7 +43,6 @@ class NSGA2:
 
         self.population = Population(pop_size, self.n_var, self.n_obj, self.n_constr, self.xl, self.xu)
         self.evaluator = Evaluator(self.problem, pop_size, self.n_obj, self.n_constr, n_processes)
-        self.dominate = Dominate(self.n_obj)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
         self.mutation = Mutation(self.mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
