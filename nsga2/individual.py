@@ -22,6 +22,9 @@ class Individual:
     
     def add_cd(self, cd):
         self._cd += cd
+
+    def clear_cd(self):
+        self._cd = 0
     
     def dominate(self, other_individual):
         flag1 = True

@@ -14,6 +14,7 @@ class Mating:
         
         parent_pop1 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
         parent_pop2 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
+        # import pdb;pdb.set_trace()
         child_pop = []
         for i in range(0, self.pop_size, 4):
             # Select parents

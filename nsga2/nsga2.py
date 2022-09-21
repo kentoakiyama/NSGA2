@@ -5,7 +5,6 @@ from time import time
 import matplotlib.pyplot as plt
 
 from nsga2.logger import custom_logger
-from nsga2.rank import Rank
 from nsga2.mating import Mating
 from nsga2.result import Result
 from nsga2.dominate import Dominate
@@ -46,7 +45,6 @@ class NSGA2:
         self.population = Population(pop_size, self.n_var, self.n_obj, self.n_constr, self.xl, self.xu)
         self.evaluator = Evaluator(self.problem, pop_size, self.n_obj, self.n_constr, n_processes)
         self.dominate = Dominate(self.n_obj)
-        self.rank = Rank(self.n_obj)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
         self.mutation = Mutation(self.mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
@@ -114,7 +112,7 @@ class NSGA2:
                 # import pdb;pdb.set_trace()
                 self.evaluator.eval(parent_pop)
                 self.population.write(parent_pop, 'solutions_all.csv')
-                self.rank.eval(parent_pop)
+                self.population.eval_rank(parent_pop)
                 self.display(gen, parent_pop)
             else:
                 child_pop = self.mating.mating(parent_pop, gen)
