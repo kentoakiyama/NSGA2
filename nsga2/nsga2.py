@@ -56,6 +56,7 @@ class NSGA2:
         feas_F = np.array([ind.f for ind in pop if (ind.feasible and ind.r > 1)])
         infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
         front_F = np.array([ind.f for ind in pop if ind.r == 1])
+        ax.cla()
         # self.fig, self.ax = plt.subplots()
         if feas_F.size != 0:
             ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
@@ -81,8 +82,7 @@ class NSGA2:
         child_pop = parent_pop.copy()
         self.evaluator.eval(parent_pop)
         self.population.write(parent_pop, 'solutions_all.csv')
-        self.population.eval_rank(parent_pop)
-        self.population.calc_crowding_distance(parent_pop)
+        parent_pop = self.population.sort(parent_pop)
         self.display(gen, parent_pop, self.ax)
         self.logger.info(f'{gen: >4} finished')
 
@@ -90,7 +90,8 @@ class NSGA2:
             child_pop = self.mating.mating(parent_pop, gen)
             self.evaluator.eval(child_pop)
             self.population.write(child_pop, 'solutions_all.csv')
-            parent_pop = self.population.reduce(parent_pop, child_pop)
+            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
+            # parent_pop = self.population.reduce(gen, parent_pop, child_pop)
             self.display(gen, child_pop, self.ax)
             self.logger.info(f'{gen: >4} finished')
             # import pdb;pdb.set_trace()

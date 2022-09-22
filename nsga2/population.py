@@ -32,16 +32,18 @@ class Population:
         return x
     
     def sort(self, pop):
-        new_pop = sorted(pop, key=lambda ind: ind.cd, reverse=True)
-        new_pop = sorted(new_pop, key=lambda ind: ind.r)
-        return new_pop
+        self.eval_rank(pop)
+        self.calc_crowding_distance(pop)
+        pop = sorted(pop, key=lambda ind: ind.cd, reverse=True)
+        pop = sorted(pop, key=lambda ind: ind.r)
+        return pop
     
-    def reduce(self, pop1, pop2):
+    def reduce(self, gen, pop1, pop2):
         pop = pop1.copy() + pop2.copy()
         self.eval_rank(pop)
         self.calc_crowding_distance(pop)
-        pop = self.sort(pop)
-        return pop[:self.pop_size]
+        pop = self.sort(pop)[:self.pop_size]
+        return pop
     
     def write(self, pop, filename):
         with open(filename, 'a') as f:

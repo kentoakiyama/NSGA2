@@ -16,6 +16,7 @@ class Evaluator:
 
     def _eval_ind(self, individual):
         f, g = self.problem.evaluate(individual.x, individual.gen, individual.ids)
+        # import pdb;pdb.set_trace()
         self.history.append(individual)
         individual.set_result(f, g)
 
