@@ -52,27 +52,6 @@ class NSGA2:
 
         self.fig, self.ax = plt.subplots()
     
-    def load_history(self):
-        if not os.path.exists('solutions.csv'):
-            return None
-        
-        self.logger.info('Load the solution file')
-        with open('solutions.csv', 'r') as f:
-            lines = f.readlines()
-        
-        history = []
-        for line in lines:
-            data = line[:-1].split(',')
-            gen = int(data[0])
-            ids = int(data[1])
-            x = list(map(float, data[2:2+self.n_var]))
-            f = list(map(float, data[2+self.n_var:2+self.n_var+self.n_obj]))
-            g = list(map(float, data[2+self.n_var+self.n_obj:2+self.n_var+self.n_obj+self.n_constr]))
-            individual = Individual(gen, ids, x)
-            individual.set_result(f, g)
-            history.append(individual)
-        # self.population.add_history(history)
-    
     def display(self, gen, pop, ax):
         feas_F = np.array([ind.f for ind in pop if (ind.feasible and ind.r > 1)])
         infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
@@ -114,6 +93,7 @@ class NSGA2:
             parent_pop = self.population.reduce(parent_pop, child_pop)
             self.display(gen, child_pop, self.ax)
             self.logger.info(f'{gen: >4} finished')
+            # import pdb;pdb.set_trace()
         
         self.result.gen = [ind.gen for ind in child_pop]
         self.result.ids = [ind.ids for ind in child_pop]
@@ -124,6 +104,7 @@ class NSGA2:
         self.result.feasible = [ind.feasible for ind in child_pop]
         self.process_time = time() - start
         self.population.write(child_pop, 'solutions_final.csv')
+        import pdb;pdb.set_trace()
         
         fig, ax = plt.subplots()
         self.display(gen, child_pop, ax)
