@@ -46,7 +46,12 @@ class Crossover:
             y1.append(y1_i)
             y2.append(y2_i)
         
-        return np.array(y1), np.array(y2)
+        y1 = np.array(y1)
+        y2 = np.array(y2)
+
+        y1 = np.clip(y1, self.xl, self.xu)
+        y2 = np.clip(y2, self.xl, self.xu)
+        return y1, y2
 
 
     def crossover_sbx_old(self, x1, x2):
