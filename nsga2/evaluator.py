@@ -5,12 +5,13 @@ import numpy as np
 from time import time
 
 class Evaluator:
-    def __init__(self, problem, pop_size, n_obj, n_constr, n_processes=1):
+    def __init__(self, problem, pop_size, n_processes=1):
         self.problem = problem
-        self.n_obj = n_obj
-        self.n_constr = n_constr
         self.pop_size = pop_size
         self.n_processes = n_processes
+
+        self.n_obj = problem.n_obj
+        self.n_constr = problem.n_constr
 
         self.history = []
 

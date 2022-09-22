@@ -6,12 +6,14 @@ from nsga2.lhs import lhs
 
 
 class Population:
-    def __init__(self, pop_size: int, n_var: int, n_obj: int, n_constr: int, xl: np.ndarray, xu: np.ndarray, sampling='lhs'):
+    def __init__(self, problem, pop_size: int, sampling='lhs'):
+        self.problem = problem
         self.pop_size = pop_size
-        self.n_var = n_var
-        self.n_obj = n_obj
-        self.xl = xl
-        self.xu = xu
+
+        self.n_var = problem.n_var
+        self.n_obj = problem.n_obj
+        self.xl = problem.xl
+        self.xu = problem.xu
         self.sampling = sampling
 
         self.history = []

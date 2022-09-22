@@ -41,8 +41,8 @@ class NSGA2:
         random.seed(seed)
         np.random.seed(seed)
 
-        self.population = Population(pop_size, self.n_var, self.n_obj, self.n_constr, self.xl, self.xu)
-        self.evaluator = Evaluator(self.problem, pop_size, self.n_obj, self.n_constr, n_processes)
+        self.population = Population(self.problem, pop_size)
+        self.evaluator = Evaluator(self.problem, pop_size, n_processes)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
         self.mutation = Mutation(self.mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
