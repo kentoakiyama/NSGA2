@@ -16,26 +16,30 @@ class Crossover:
         return beta
     
     def _sbx(self, x1_i, x2_i, xl, xu):
-        beta1 = 1 + 2 * (x1_i - xl) / (x2_i - x1_i)
-        beta2 = 1 + 2 * (xu - x2_i) / (x2_i - x1_i)
+        if abs(x1_i - x2_i) > 1e-6:
+            beta1 = 1 + 2 * (x1_i - xl) / (x2_i - x1_i)
+            beta2 = 1 + 2 * (xu - x2_i) / (x2_i - x1_i)
 
-        alpha1 = 2 - beta1**(-(self.eta+1))
-        alpha2 = 2 - beta2**(-(self.eta+1))
+            alpha1 = 2 - beta1**(-(self.eta+1))
+            alpha2 = 2 - beta2**(-(self.eta+1))
 
-        r = np.random.random()
-        if r <= 1/alpha1:
-            betaq1 = (r*alpha1)**(1/(self.eta+1))
+            r = np.random.random()
+            if r <= 1/alpha1:
+                betaq1 = (r*alpha1)**(1/(self.eta+1))
+            else:
+                betaq1 = (2-r*alpha1)**(-1/(self.eta+1))
+
+            r = np.random.random()
+            if r < 1/alpha2:
+                betaq2 = (r*alpha2)**(1/(self.eta+1))
+            else:
+                betaq2 = (2-r*alpha2)**(-1/(self.eta+1))
+            
+            y1_i = 0.5 * (x1_i + x2_i - betaq1*(x2_i - x1_i))
+            y2_i = 0.5 * (x1_i + x2_i + betaq2*(x2_i - x1_i))
         else:
-            betaq1 = (2-r*alpha1)**(-1/(self.eta+1))
-
-        r = np.random.random()
-        if r < 1/alpha2:
-            betaq2 = (r*alpha2)**(1/(self.eta+1))
-        else:
-            betaq2 = (2-r*alpha2)**(-1/(self.eta+1))
-        
-        y1_i = 0.5 * (x1_i + x2_i - betaq1*(x2_i - x1_i))
-        y2_i = 0.5 * (x1_i + x2_i + betaq2*(x2_i - x1_i))
+            y1_i = x1_i
+            y2_i = x2_i
         return y1_i, y2_i
     
     def crossover_sbx(self, x1, x2):
