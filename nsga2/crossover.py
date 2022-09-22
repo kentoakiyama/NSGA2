@@ -81,7 +81,7 @@ if __name__ == '__main__':
     x1 = np.array([0.2])
     x2 = np.array([0.8])
 
-    crossover = Crossover(0, 1, 10)
+    crossover = Crossover([0], [1], 10)
     
     result = []
     for i in range(5000):
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     x1 = np.array([0.2])
     x2 = np.array([0.8])
 
-    crossover = Crossover(0, 15, 10)
+    crossover = Crossover([0], [15], 10)
     
     result = []
     for i in range(5000):
