@@ -37,7 +37,7 @@ class NSGA2:
 
         self.logger = custom_logger(__name__)
 
-        seed = 0
+        seed = 1
         random.seed(seed)
         np.random.seed(seed)
 
@@ -58,8 +58,8 @@ class NSGA2:
         front_F = np.array([ind.f for ind in pop if ind.r == 1])
         ax.cla()
         # self.fig, self.ax = plt.subplots()
-        if feas_F.size != 0:
-            ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
+        # if feas_F.size != 0:
+        #     ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
         if infeas_F.size != 0:
             ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red', marker='x', label='infeasible')
         if front_F.size != 0:
@@ -79,19 +79,28 @@ class NSGA2:
         # 1st generation
         gen = 1
         parent_pop = self.population.create(gen)
-        child_pop = parent_pop.copy()
+        child_pop = parent_pop
         self.evaluator.eval(parent_pop)
         self.population.write(parent_pop, 'solutions_all.csv')
         parent_pop = self.population.sort(parent_pop)
         self.display(gen, parent_pop, self.ax)
         self.logger.info(f'{gen: >4} finished')
+        
+        # 2nd generation
+        gen = 2
+        child_pop = self.mating.mating(parent_pop, gen)
+        self.evaluator.eval(child_pop)
+        self.population.write(child_pop, 'solutions_all.csv')
+        child_pop = self.population.sort(child_pop)
+        self.display(gen, child_pop, self.ax)
+        self.logger.info(f'{gen: >4} finished')
 
-        for gen in range(2, self.n_gen+1):
+        for gen in range(3, self.n_gen+1):
+            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
             child_pop = self.mating.mating(parent_pop, gen)
             self.evaluator.eval(child_pop)
             self.population.write(child_pop, 'solutions_all.csv')
-            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
-            # parent_pop = self.population.reduce(gen, parent_pop, child_pop)
+            child_pop = self.population.sort(child_pop)
             self.display(gen, child_pop, self.ax)
             self.logger.info(f'{gen: >4} finished')
             # import pdb;pdb.set_trace()
