@@ -1,14 +1,15 @@
+from typing import List
 import numpy as np
 
 
 class Mutation:
-    def __init__(self, mutation_prob, xl, xu, eta):
+    def __init__(self, mutation_prob: float, xl: np.ndarray, xu: np.ndarray, eta: float):
         self.mutation_prob = mutation_prob
         self.xl = xl
         self.xu = xu
         self.eta = eta
 
-    def _mutation(self, x):
+    def _mutation(self, x: np.ndarray) -> np.ndarray:
         """
         Mutation function
         """
@@ -30,7 +31,7 @@ class Mutation:
         x = np.clip(x, self.xl, self.xu)
         return x
     
-    def mutation(self, pop):
+    def mutation(self, pop: List) -> List:
         for ind in pop:
             if np.random.random() < self.mutation_prob:
                 self._mutation(ind.x)

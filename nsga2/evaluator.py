@@ -18,7 +18,7 @@ class Evaluator:
         individual.set_result(f, g)
         return individual
 
-    def eval(self, pop):
+    def eval(self, pop: List) -> List:
         if self.n_processes == 1:
             for individual in pop:
                 _ = self._eval_ind(individual)

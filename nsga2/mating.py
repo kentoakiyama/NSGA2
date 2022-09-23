@@ -1,10 +1,11 @@
+from typing import List
 import numpy as np
 
 from nsga2.individual import Individual
 
 
 class Mating:
-    def __init__(self, pop_size, n_var, selection, crossover, mutation):
+    def __init__(self, pop_size: int, n_var: int, selection, crossover, mutation):
         self.pop_size = pop_size
         self.n_var = n_var
 
@@ -12,7 +13,7 @@ class Mating:
         self.crossover = crossover
         self.mutation = mutation
     
-    def _mating(self, parent_pop, gen):
+    def _mating(self, parent_pop: List, gen: int) -> List:
         
         parent_pop1 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
         parent_pop2 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
@@ -38,7 +39,7 @@ class Mating:
             child_pop.append(Individual(gen, i+3, c2))
         return child_pop
 
-    def mating(self, parent_pop, gen):
+    def mating(self, parent_pop: List, gen: int) -> List:
         child_pop = self._mating(parent_pop, gen)
         self.mutation(child_pop)
         return child_pop

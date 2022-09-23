@@ -18,11 +18,11 @@ class Population:
 
         self.history = []
 
-    def create(self, gen: int, x=None):
+    def create(self, gen: int, x=None) -> List:
         if x is None:
             x = self.x_sampling()
-        individuals = [Individual(gen, (i+1), x) for i, x in enumerate(x)]
-        return individuals
+        pop = [Individual(gen, (i+1), x) for i, x in enumerate(x)]
+        return pop
     
     def add_history(self, pop: List):
         self.history.extend(pop)
@@ -33,7 +33,7 @@ class Population:
         x = x * (self.xu - self.xl) + self.xl
         return x
     
-    def sort(self, pop):
+    def sort(self, pop: List) -> List:
         pop = pop.copy()
         self.eval_rank(pop)
         self.calc_crowding_distance(pop)
@@ -41,21 +41,21 @@ class Population:
         pop = sorted(pop, key=lambda ind: ind.r)
         return pop
     
-    def reduce(self, gen, pop1, pop2):
+    def reduce(self, gen: int, pop1: List, pop2: List) -> List:
         pop = pop1.copy() + pop2.copy()
         self.eval_rank(pop)
         self.calc_crowding_distance(pop)
         pop = self.sort(pop)[:self.pop_size]
         return pop
     
-    def write(self, pop, filename):
+    def write(self, pop: List, filename: str):
         with open(filename, 'a') as f:
             for ind in pop:
                 string = f'{ind.gen},{ind.ids},{list(ind.x)},{list(ind.f)},{list(ind.g)},{ind.cv},{ind.feasible}\n'
                 string = string.replace('[', '').replace(']', '').replace(' ', '')
                 f.write(string)
     
-    def eval_rank(self, pop):
+    def eval_rank(self, pop: List) -> None:
         '''
         get rank for each individual
 
@@ -87,7 +87,7 @@ class Population:
             for i, idx in enumerate(cv_sorted_idx):
                 infeas_sols[idx].set_rank(i + 1 + rank)
     
-    def calc_crowding_distance(self, pop):
+    def calc_crowding_distance(self, pop: List) -> None:
         for ind in pop:
             ind.clear_cd()
 

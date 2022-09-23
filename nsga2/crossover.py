@@ -1,8 +1,9 @@
+from typing import Tuple
 import numpy as np
 
 
 class Crossover:
-    def __init__(self, xl, xu, eta):
+    def __init__(self, xl: np.ndarray, xu: np.ndarray, eta: float):
         self.xl = xl
         self.xu = xu
         self.eta = eta
@@ -15,7 +16,7 @@ class Crossover:
             beta = (1/(2-2*r))**(1/(self.eta+1))
         return beta
     
-    def _sbx(self, x1_i, x2_i, xl, xu):
+    def _sbx(self, x1_i: float, x2_i: float, xl: float, xu: float) -> Tuple[float, float]:
         if abs(x1_i - x2_i) > 1e-6:
             beta1 = 1 + 2 * (x1_i - xl) / (x2_i - x1_i)
             beta2 = 1 + 2 * (xu - x2_i) / (x2_i - x1_i)
@@ -42,7 +43,7 @@ class Crossover:
             y2_i = x2_i
         return y1_i, y2_i
     
-    def crossover_sbx(self, x1, x2):
+    def crossover_sbx(self, x1: np.ndarray, x2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         y1 = []
         y2 = []
         for x1_i, x2_i, xl, xu in zip(x1, x2, self.xl, self.xu):
@@ -58,7 +59,7 @@ class Crossover:
         return y1, y2
 
 
-    def crossover_sbx_old(self, x1, x2):
+    def crossover_sbx_old(self, x1: np.ndarray, x2: np.ndarray):
         """
         Crossover by using Simulated binary crossover
         Two children are generated from parents.

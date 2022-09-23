@@ -26,13 +26,8 @@ class NSGA2:
         self.n_gen = n_gen                               # number of generation
         self.n_var = self.problem.n_var                  # number of variables
         self.n_obj = self.problem.n_obj                  # number of objective function
-        self.n_constr = self.problem.n_constr            # number of constraint function
         self.xl = self.problem.xl                        # lower bound of variables
         self.xu = self.problem.xu                        # upper bound of variables
-        self.mutation_prob = mutation_prob
-        self.mutation_eta = mutation_eta
-        self.crossover_eta = crossover_eta
-        self.n_processes = n_processes
         self.sampling = sampling
         self.seed = seed
 
@@ -42,7 +37,7 @@ class NSGA2:
         self.population = Population(self.problem, pop_size)
         self.evaluator = Evaluator(self.problem, pop_size, n_processes)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
-        self.mutation = Mutation(self.mutation_prob, self.xl, self.xu, mutation_eta)
+        self.mutation = Mutation(mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
         self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
