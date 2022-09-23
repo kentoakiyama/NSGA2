@@ -65,6 +65,7 @@ class NSGA2:
             ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red', marker='x', label='infeasible')
         if front_F.size != 0:
             ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
+        ax.legend(loc='upper right')
         plt.draw()
         plt.pause(0.01)
     
