@@ -98,7 +98,7 @@ class NSGA2:
         self.result.r = [ind.r for ind in child_pop]
         self.result.feasible = [ind.feasible for ind in child_pop]
         self.process_time = time() - start
-        self.population.write(child_pop, 'solutions_final.csv')
+        self.population.write(child_pop, 'solutions_final.csv', 'w')
         
         fig, ax = plt.subplots()
         self.display(gen, child_pop, ax)

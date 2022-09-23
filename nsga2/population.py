@@ -48,8 +48,8 @@ class Population:
         pop = self.sort(pop)[:self.pop_size]
         return pop
     
-    def write(self, pop: List, filename: str):
-        with open(filename, 'a') as f:
+    def write(self, pop: List, filename: str, mode='a'):
+        with open(filename, mode) as f:
             for ind in pop:
                 string = f'{ind.gen},{ind.ids},{list(ind.x)},{list(ind.f)},{list(ind.g)},{ind.cv},{ind.feasible}\n'
                 string = string.replace('[', '').replace(']', '').replace(' ', '')
