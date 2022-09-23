@@ -22,8 +22,8 @@ class NSGA2:
 
         self.problem = problem()
 
-        self.pop_size = pop_size            # number of population size (must be multiple of 4)
-        self.n_gen = n_gen                  # number of generation
+        self.pop_size = pop_size                         # number of population size (must be multiple of 4)
+        self.n_gen = n_gen                               # number of generation
         self.n_var = self.problem.n_var                  # number of variables
         self.n_obj = self.problem.n_obj                  # number of objective function
         self.n_constr = self.problem.n_constr            # number of constraint function
@@ -78,7 +78,6 @@ class NSGA2:
         # 1st generation
         gen = 1
         parent_pop = self.population.create(gen)
-        child_pop = parent_pop
         self.evaluator.eval(parent_pop)
         self.population.write(parent_pop, 'solutions_all.csv')
         parent_pop = self.population.sort(parent_pop)
@@ -95,6 +94,7 @@ class NSGA2:
         self.logger.info(f'{gen: >4} finished')
 
         for gen in range(3, self.n_gen+1):
+            import pdb;pdb.set_trace()
             parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
             child_pop = self.mating.mating(parent_pop, gen)
             self.evaluator.eval(child_pop)
