@@ -3,6 +3,7 @@ import random
 import numpy as np
 from time import time
 import matplotlib.pyplot as plt
+from copy import deepcopy
 
 from nsga2.logger import custom_logger
 from nsga2.mating import Mating
@@ -12,11 +13,10 @@ from nsga2.crossover import Crossover
 from nsga2.evaluator import Evaluator
 from nsga2.selection import Selection
 from nsga2.population import Population
-from nsga2.individual import Individual
-
+from nsga2.save import Save
 
 class NSGA2:
-    def __init__(self, problem, pop_size: int, n_gen: int, mutation_prob=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs', seed=1):
+    def __init__(self, problem, pop_size: int, n_gen: int, mutation_prob=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs', seed=1, restart=False):
         if pop_size % 4 != 0:
             raise ValueError('"pop_size" must be multiple of 4')
 
@@ -30,8 +30,11 @@ class NSGA2:
         self.xu = self.problem.xu                        # upper bound of variables
         self.sampling = sampling
         self.seed = seed
+        self.restart = restart
 
         self.logger = custom_logger(__name__)
+        
+        self.all_populations = []
 
 
         self.population = Population(self.problem, pop_size)
@@ -42,6 +45,7 @@ class NSGA2:
         self.mating = Mating(self.n_obj, self.n_var, self.selection, self.crossover, self.mutation)
         self.result = Result()
         self.mating = Mating(self.pop_size, self.n_var, self.selection.selection, self.crossover.crossover_sbx, self.mutation.mutation)
+        self.save = Save()
 
         self.fig, self.ax = plt.subplots()
     
@@ -71,24 +75,47 @@ class NSGA2:
         self.set_seed()
         start = time()
         self.logger.info('Start optimization!')
+
+        if self.restart:
+            all_populations = self.save.load_pickle()
+        else:
+            all_populations = []
         
         # 1st generation
         gen = 1
-        parent_pop = self.population.create(gen)
-        parent_pop = self.evaluator.eval(parent_pop)
-        parent_pop = self.population.sort(parent_pop)
+        if len(all_populations) == 0:
+            parent_pop = self.population.create(gen)
+            parent_pop = self.evaluator.eval(parent_pop)
+            parent_pop = self.population.sort(parent_pop)
+            self.all_populations.append(deepcopy(parent_pop))
+            self.save.save_pickle(self.all_populations)
+        else:
+            self.logger.info('Load data from cache file.')
+            parent_pop = all_populations[0]
+            self.all_populations.append(deepcopy(parent_pop))
+
         self.display(gen, parent_pop, self.ax)
         self.logger.info('| Gen | ND_solutions |')
         self.logger.info(f'|{gen: >5}|{len([ind.f for ind in parent_pop if ind.r == 1]): >14}|')
         
+        
         for gen in range(2, self.n_gen+1):
-            child_pop = self.mating.mating(parent_pop, gen)
-            child_pop = self.evaluator.eval(child_pop)
-            child_pop = self.population.sort(child_pop)
+            if len(all_populations) < gen:
+                child_pop = self.mating.mating(parent_pop, gen)
+                child_pop = self.evaluator.eval(child_pop)
+                child_pop = self.population.sort(child_pop)
+                self.all_populations.append(deepcopy(child_pop))
+                self.save.save_pickle(self.all_populations)
+
+                parent_pop = self.population.sort(parent_pop+deepcopy(child_pop))[:self.pop_size]
+            else:
+                self.logger.info('Load data from cache file.')
+                parent_pop = all_populations[gen-2]
+                child_pop = all_populations[gen-1]
+                self.all_populations.append(deepcopy(child_pop))
             self.display(gen, child_pop, self.ax)
             self.logger.info(f'|{gen: >5}|{len([ind.f for ind in child_pop if ind.r == 1]): >14}|')
 
-            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
         
         self.result.gen = [ind.gen for ind in child_pop]
         self.result.ids = [ind.ids for ind in child_pop]
