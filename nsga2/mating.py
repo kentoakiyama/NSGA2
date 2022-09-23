@@ -16,14 +16,6 @@ class Mating:
         
         parent_pop1 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
         parent_pop2 = np.random.choice(parent_pop, size=self.pop_size, replace=False)
-        
-        # print('##################################################')
-        # for ind in parent_pop1:
-        #     print(ind.ids)
-        #     print(ind.x)
-        #     print(ind.f)
-        #     print(ind.r, ind.cd)
-        #     print('--------------------------------------------------')
 
         child_pop = []
         for i in range(0, self.pop_size, 4):
