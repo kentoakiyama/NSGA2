@@ -10,6 +10,8 @@ class Evaluator:
         self.pop_size = pop_size
         self.n_processes = n_processes
 
+        self.history = []
+
     def _eval_ind(self, individual):
         f, g = self.problem.evaluate(individual.x, individual.gen, individual.ids)
         # import pdb;pdb.set_trace()
