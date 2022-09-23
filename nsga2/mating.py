@@ -23,13 +23,11 @@ class Mating:
             # Select parents
             p1 = self.selection(parent_pop1[i+0], parent_pop1[i+1])
             p2 = self.selection(parent_pop1[i+2], parent_pop1[i+3])
-            # print(p1.ids, p2.ids)
-            # import pdb;pdb.set_trace()
             # Generate children
             c1, c2 = self.crossover(p1.x, p2.x)
-            # import pdb;pdb.set_trace()
             child_pop.append(Individual(gen, i, c1))
             child_pop.append(Individual(gen, i+1, c2))
+
             # Select parents
             p1 = self.selection(parent_pop2[i+0], parent_pop2[i+1])
             p2 = self.selection(parent_pop2[i+2], parent_pop2[i+3])

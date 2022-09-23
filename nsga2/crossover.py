@@ -59,22 +59,6 @@ class Crossover:
         return y1, y2
 
 
-    def crossover_sbx_old(self, x1: np.ndarray, x2: np.ndarray):
-        """
-        Crossover by using Simulated binary crossover
-        Two children are generated from parents.
-        """
-        beta = self._get_beta()
-        y1 = 0.5*((1+beta)*x1 + (1-beta)*x2)
-        # y1 = (x1+x2)/2 + beta * abs(x1 - x2/2)
-        y1 = np.clip(y1, self.xl, self.xu)
-
-        y2 = 0.5*((1-beta)*x1 + (1+beta)*x2)
-        # y2 = (x1+x2)/2 - beta * abs(x1 - x2/2)
-        y2 = np.clip(y2, self.xl, self.xu)
-        return y1, y2
-
-
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
 

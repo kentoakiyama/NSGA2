@@ -11,7 +11,7 @@ n_gen = 100
 seed = 6
 pop_size = 100
 crossover_eta = 15
-mutation_prob = 0.
+mutation_prob = 0.1
 mutation_eta = 20
 restart = False
 
