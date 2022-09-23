@@ -37,6 +37,21 @@ class Mating:
             child_pop.append(Individual(gen, i+2, c1))
             child_pop.append(Individual(gen, i+3, c2))
         return child_pop
+    
+    def _tournament(self, individual1, individual2):
+        # get better individual from two individuals
+        if individual1.r < individual2.r:
+            return individual1
+        elif individual1.r > individual2.r:
+            return individual2
+        elif individual1.cd > individual2.cd:
+            return individual1
+        elif individual1.cd < individual2.cd:
+            return individual2
+        elif np.random.random() < 0.5:
+            return individual1
+        else:
+            return individual2
 
     def mating(self, parent_pop, gen):
         child_pop = self._mating(parent_pop, gen)
