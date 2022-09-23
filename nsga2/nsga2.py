@@ -52,26 +52,19 @@ class NSGA2:
         self.fig, self.ax = plt.subplots()
     
     def display(self, gen, pop, ax):
-        feas_F = np.array([ind.f for ind in pop])
-        r = np.array([ind.r for ind in pop])
+        feas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r == 1)])
         infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
         front_F = np.array([ind.f for ind in pop if ind.r == 1])
         ax.cla()
-        ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c=r, cmap='jet', label='feasible')
-        # self.fig, self.ax = plt.subplots()
-        # if feas_F.size != 0:
-        #     ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
-        # if infeas_F.size != 0:
-        #     ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red', marker='x', label='infeasible')
-        # if front_F.size != 0:
-        #     ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
+        self.fig, self.ax = plt.subplots()
+        if feas_F.size != 0:
+            ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
+        if infeas_F.size != 0:
+            ax.scatter(infeas_F[:, 0], infeas_F[:, 1], alpha=0.5, c='tab:red', marker='x', label='infeasible')
+        if front_F.size != 0:
+            ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
         plt.draw()
         plt.pause(0.2)
-        # plt.show()
-        # import pdb;pdb.set_trace()
-    
-    def step(self, gen, parent_pop, child_pop):
-        parent_pop = self.population.reduce(parent_pop, child_pop)
 
     def minimize(self):
         start = time()
