@@ -88,7 +88,7 @@ class NSGA2:
         gen = 2
         child_pop = self.mating.mating(parent_pop, gen)
         self.evaluator.eval(child_pop)
-        self.population.write(child_pop, 'solutions_all.csv')
+        # self.population.write(child_pop, 'solutions_all.csv')
         child_pop = self.population.sort(child_pop)
         self.display(gen, child_pop, self.ax)
         self.logger.info(f'{gen: >4} finished')
@@ -98,7 +98,7 @@ class NSGA2:
             parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
             child_pop = self.mating.mating(parent_pop, gen)
             self.evaluator.eval(child_pop)
-            self.population.write(child_pop, 'solutions_all.csv')
+            # self.population.write(child_pop, 'solutions_all.csv')
             child_pop = self.population.sort(child_pop)
             self.display(gen, child_pop, self.ax)
             self.logger.info(f'{gen: >4} finished')
