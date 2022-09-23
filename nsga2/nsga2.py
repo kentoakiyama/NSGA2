@@ -35,7 +35,7 @@ class NSGA2:
 
 
         self.population = Population(self.problem, pop_size)
-        self.evaluator = Evaluator(self.problem, pop_size, n_processes)
+        self.evaluator = Evaluator(self.problem, pop_size, 'solutions_all.csv', n_processes)
         self.crossover = Crossover(self.xl, self.xu, crossover_eta)
         self.mutation = Mutation(mutation_prob, self.xl, self.xu, mutation_eta)
         self.selection = Selection()
@@ -76,7 +76,6 @@ class NSGA2:
         gen = 1
         parent_pop = self.population.create(gen)
         parent_pop = self.evaluator.eval(parent_pop)
-        self.population.write(parent_pop, 'solutions_all.csv')
         parent_pop = self.population.sort(parent_pop)
         self.display(gen, parent_pop, self.ax)
         self.logger.info('| Gen | ND_solutions |')
