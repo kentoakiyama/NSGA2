@@ -59,8 +59,30 @@ class ZDT2:
         return [f1, f2], []
 ```
 
+### 最適化
+
+以下が、最適化を実行するサンプルになります。
+
+```python
+n_processes = 1     # 並列数
+n_gen = 100         # 世代数
+seed = 6            # シード値
+pop_size = 128      # 個体数
+crossover_eta = 15  # 交配のパラメータ
+mutation_prob = 0.  # 突然変異の確率
+mutation_eta = 20   # 突然変異のパラメータ
+
+nsga2 = NSGA2(ZDT2, pop_size, n_gen,
+              mutation_prob=mutation_prob, mutation_eta=mutation_eta,
+              crossover_eta=crossover_eta, n_processes=n_processes, seed=seed)
+result = nsga2.minimize()
+```
+
+最適化の結果は、resultに保存されています。
+
 ## 環境
 - numpy
 - matplotlib
+- joblib
 
 
