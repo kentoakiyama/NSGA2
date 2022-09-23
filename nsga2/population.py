@@ -34,6 +34,7 @@ class Population:
         return x
     
     def sort(self, pop):
+        pop = pop.copy()
         self.eval_rank(pop)
         self.calc_crowding_distance(pop)
         pop = sorted(pop, key=lambda ind: ind.cd, reverse=True)
