@@ -34,11 +34,10 @@ class NSGA2:
         self.crossover_eta = crossover_eta
         self.n_processes = n_processes
         self.sampling = sampling
+        self.seed = seed
 
         self.logger = custom_logger(__name__)
 
-        random.seed(seed)
-        np.random.seed(seed)
 
         self.population = Population(self.problem, pop_size)
         self.evaluator = Evaluator(self.problem, pop_size, n_processes)
@@ -51,12 +50,15 @@ class NSGA2:
 
         self.fig, self.ax = plt.subplots()
     
+    def set_seed(self):
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+    
     def display(self, gen, pop, ax):
-        feas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r == 1)])
-        infeas_F = np.array([ind.f for ind in pop if (not ind.feasible and ind.r > 1)])
+        feas_F = np.array([ind.f for ind in pop if (ind.feasible and ind.r > 1)])
+        infeas_F = np.array([ind.f for ind in pop if (not ind.feasible)])
         front_F = np.array([ind.f for ind in pop if ind.r == 1])
         ax.cla()
-        self.fig, self.ax = plt.subplots()
         if feas_F.size != 0:
             ax.scatter(feas_F[:, 0], feas_F[:, 1], alpha=0.5, c='tab:green', label='feasible')
         if infeas_F.size != 0:
@@ -64,9 +66,13 @@ class NSGA2:
         if front_F.size != 0:
             ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
         plt.draw()
-        plt.pause(0.2)
+        plt.pause(0.01)
+    
+    def step(self):
+        pass
 
     def minimize(self):
+        self.set_seed()
         start = time()
         self.logger.info('Start optimization!')
         
@@ -77,26 +83,17 @@ class NSGA2:
         self.population.write(parent_pop, 'solutions_all.csv')
         parent_pop = self.population.sort(parent_pop)
         self.display(gen, parent_pop, self.ax)
-        self.logger.info(f'{gen: >4} finished')
+        self.logger.info('| Gen | ND_solutions |')
+        self.logger.info(f'|{gen: >5}|{len([ind.f for ind in parent_pop if ind.r == 1]): >14}|')
         
-        # 2nd generation
-        gen = 2
-        child_pop = self.mating.mating(parent_pop, gen)
-        self.evaluator.eval(child_pop)
-        # self.population.write(child_pop, 'solutions_all.csv')
-        child_pop = self.population.sort(child_pop)
-        self.display(gen, child_pop, self.ax)
-        self.logger.info(f'{gen: >4} finished')
-
-        for gen in range(3, self.n_gen+1):
-            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
+        for gen in range(2, self.n_gen+1):
             child_pop = self.mating.mating(parent_pop, gen)
             self.evaluator.eval(child_pop)
-            # self.population.write(child_pop, 'solutions_all.csv')
             child_pop = self.population.sort(child_pop)
             self.display(gen, child_pop, self.ax)
-            self.logger.info(f'{gen: >4} finished')
-            # import pdb;pdb.set_trace()
+            self.logger.info(f'|{gen: >5}|{len([ind.f for ind in child_pop if ind.r == 1]): >14}|')
+
+            parent_pop = self.population.sort(parent_pop+child_pop)[:self.pop_size]
         
         self.result.gen = [ind.gen for ind in child_pop]
         self.result.ids = [ind.ids for ind in child_pop]
@@ -107,7 +104,6 @@ class NSGA2:
         self.result.feasible = [ind.feasible for ind in child_pop]
         self.process_time = time() - start
         self.population.write(child_pop, 'solutions_final.csv')
-        import pdb;pdb.set_trace()
         
         fig, ax = plt.subplots()
         self.display(gen, child_pop, ax)
