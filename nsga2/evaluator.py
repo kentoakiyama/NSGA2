@@ -16,10 +16,6 @@ class Evaluator:
         f, g = self.problem.evaluate(individual.x, individual.gen, individual.ids)
         self.history.append(individual)
         individual.set_result(f, g)
-        with open(self.filename, 'a') as f:
-            string = f'{individual.gen},{individual.ids},{list(individual.x)},{list(individual.f)},{list(individual.g)},{individual.cv},{individual.feasible}\n'
-            string = string.replace('[', '').replace(']', '').replace(' ', '')
-            f.write(string)
         return individual
 
     def eval(self, pop: List) -> List:

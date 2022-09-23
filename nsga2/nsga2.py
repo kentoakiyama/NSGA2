@@ -88,6 +88,7 @@ class NSGA2:
             parent_pop = self.evaluator.eval(parent_pop)
             parent_pop = self.population.sort(parent_pop)
             self.all_populations.append(deepcopy(parent_pop))
+            self.population.write(parent_pop, 'solutions_all.csv', 'w')
             self.save.save_pickle(self.all_populations)
         else:
             self.logger.info('Load data from cache file.')
@@ -104,6 +105,7 @@ class NSGA2:
                 child_pop = self.mating.mating(parent_pop, gen)
                 child_pop = self.evaluator.eval(child_pop)
                 child_pop = self.population.sort(child_pop)
+                self.population.write(child_pop, 'solutions_all.csv', 'a')
                 self.all_populations.append(deepcopy(child_pop))
                 self.save.save_pickle(self.all_populations)
 

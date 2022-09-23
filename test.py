@@ -6,8 +6,8 @@ from test_functions.get_problem import get_problem
 
 problem = get_problem('TNK')
 
-n_processes = 1
-n_gen = 15
+n_processes = 4
+n_gen = 100
 seed = 6
 pop_size = 100
 crossover_eta = 15
