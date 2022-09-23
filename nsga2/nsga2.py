@@ -16,7 +16,7 @@ from nsga2.individual import Individual
 
 
 class NSGA2:
-    def __init__(self, problem, pop_size: int, n_gen: int, mutation_prob=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs'):
+    def __init__(self, problem, pop_size: int, n_gen: int, mutation_prob=0.1, mutation_eta=0.4, crossover_eta=0.4, n_processes=1, sampling='lhs', seed=1):
         if pop_size % 4 != 0:
             raise ValueError('"pop_size" must be multiple of 4')
 
@@ -37,7 +37,6 @@ class NSGA2:
 
         self.logger = custom_logger(__name__)
 
-        seed = 1
         random.seed(seed)
         np.random.seed(seed)
 

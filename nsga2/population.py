@@ -28,8 +28,8 @@ class Population:
         self.history.extend(pop)
 
     def x_sampling(self):
-        x = np.random.random([self.pop_size, self.n_var])
-        # x = lhs(self.n_var, self.pop_size)
+        # x = np.random.random([self.pop_size, self.n_var])
+        x = lhs(self.n_var, self.pop_size)
         x = x * (self.xu - self.xl) + self.xl
         return x
     

@@ -81,7 +81,7 @@ if __name__ == '__main__':
     x1 = np.array([0.2])
     x2 = np.array([0.8])
 
-    crossover = Crossover([0], [1], 10)
+    crossover = Crossover([0], [1], 1)
     
     result = []
     for i in range(5000):
@@ -89,13 +89,13 @@ if __name__ == '__main__':
         result.append(y1[0])
         result.append(y2[0])
     
-    ax.hist(result, bins=200)
+    ax.hist(result, bins=200, density=True)
 
     fig, ax = plt.subplots()
     x1 = np.array([0.2])
     x2 = np.array([0.8])
 
-    crossover = Crossover([0], [15], 10)
+    crossover = Crossover([0], [15], 30)
     
     result = []
     for i in range(5000):
@@ -103,6 +103,6 @@ if __name__ == '__main__':
         result.append(y1[0])
         result.append(y2[0])
     
-    ax.hist(result, bins=200)
+    ax.hist(result, bins=200, density=True)
 
     plt.show()
