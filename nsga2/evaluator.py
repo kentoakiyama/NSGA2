@@ -1,7 +1,6 @@
-from multiprocessing import Pool
 from typing import List
 import numpy as np
-
+import joblib
 from time import time
 
 class Evaluator:
@@ -17,12 +16,14 @@ class Evaluator:
         # import pdb;pdb.set_trace()
         self.history.append(individual)
         individual.set_result(f, g)
+        return individual
 
     def eval(self, pop):
         if self.n_processes == 1:
             for individual in pop:
-                self._eval_ind(individual)
+                _ = self._eval_ind(individual)
         elif self.n_processes >= 2:
-            with Pool(self.n_processes) as pool:
-                pool.starmap(self._eval_ind, pop)
+            pop = joblib.Parallel(n_jobs=self.n_processes)(
+                joblib.delayed(self._eval_ind)(ind) for ind in pop
+            )
         return pop
