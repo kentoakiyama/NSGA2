@@ -12,6 +12,9 @@ class Individual:
         self._cv = None
         self._r = None
         self._cd = 0
+    
+    def set_x(self, x):
+        self._x = x
 
     def set_result(self, f, g):
         self._f = f
