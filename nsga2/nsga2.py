@@ -65,11 +65,15 @@ class NSGA2:
         if front_F.size != 0:
             ax.scatter(front_F[:, 0], front_F[:, 1], alpha=0.5, c='tab:blue', label='non-dominated')
         ax.legend(loc='upper right')
+        ax.set_title(f"Gen: {gen}")
         plt.draw()
         plt.pause(0.01)
     
-    def step(self):
-        pass
+    def step(self, pop: list) -> list:
+        pop = self.evaluator.eval(pop)
+        self.population.eval_rank(pop)
+        self.population.calc_crowding_distance(pop)
+        return pop
 
     def minimize(self):
         self.set_seed()
@@ -85,8 +89,7 @@ class NSGA2:
         gen = 1
         if len(all_populations) == 0:
             parent_pop = self.population.create(gen)
-            parent_pop = self.evaluator.eval(parent_pop)
-            parent_pop = self.population.sort(parent_pop)
+            self.step(parent_pop)
             self.all_populations.append(deepcopy(parent_pop))
             self.population.write(parent_pop, 'solutions_all.csv', 'w')
             self.save.save_pickle(self.all_populations)
@@ -103,19 +106,18 @@ class NSGA2:
         for gen in range(2, self.n_gen+1):
             if len(all_populations) < gen:
                 child_pop = self.mating.mating(parent_pop, gen)
-                child_pop = self.evaluator.eval(child_pop)
-                child_pop = self.population.sort(child_pop)
+                self.step(child_pop)
                 self.population.write(child_pop, 'solutions_all.csv', 'a')
                 self.all_populations.append(deepcopy(child_pop))
                 self.save.save_pickle(self.all_populations)
 
-                parent_pop = self.population.sort(parent_pop+deepcopy(child_pop))[:self.pop_size]
+                parent_pop = self.population.reduce(gen, parent_pop, child_pop)
             else:
                 self.logger.info('Load data from cache file.')
                 parent_pop = all_populations[gen-2]
                 child_pop = all_populations[gen-1]
                 self.all_populations.append(deepcopy(child_pop))
-            self.display(gen, child_pop, self.ax)
+            self.display(gen, parent_pop, self.ax)
             self.logger.info(f'|{gen: >5}|{len([ind.f for ind in child_pop if ind.r == 1]): >14}|')
 
         
@@ -129,8 +131,8 @@ class NSGA2:
         self.process_time = time() - start
         self.population.write(child_pop, 'solutions_final.csv', 'w')
         
-        fig, ax = plt.subplots()
-        self.display(gen, child_pop, ax)
+        # fig, ax = plt.subplots()
+        # self.display(gen, child_pop, ax)
         plt.show()
         return self.result
 
