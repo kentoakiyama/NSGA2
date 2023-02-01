@@ -34,4 +34,4 @@ class Mutation:
     def mutation(self, pop: List) -> List:
         for ind in pop:
             if np.random.random() < self.mutation_prob:
-                self._mutation(ind.x)
+                ind.set_x(self._mutation(ind.x))
