@@ -43,8 +43,6 @@ class Population:
     
     def reduce(self, gen: int, pop1: List, pop2: List) -> List:
         pop = pop1.copy() + pop2.copy()
-        self.eval_rank(pop)
-        self.calc_crowding_distance(pop)
         pop = self.sort(pop)[:self.pop_size]
         return pop
     
@@ -98,7 +96,9 @@ class Population:
             if len(tmp_pop) == 0:
                 rank += 1
                 continue
-
+            if len(tmp_pop) <= 2:
+                for ind in tmp_pop:
+                    ind.add_cd(10e+10)
             for i in range(self.n_obj):
                 tmp_pop = sorted(tmp_pop, key=lambda ind: ind.f[i])
                 tmp_pop[0].add_cd(10e+10)
